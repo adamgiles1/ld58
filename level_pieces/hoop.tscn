@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://1g3uswvc7gla"]
+
+[ext_resource type="Script" uid="uid://bnkfw74n1dxtv" path="res://level_pieces/hoop.gd" id="1_801vi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_801vi"]
+albedo_color = Color(0.5333326, 0.45087647, 0, 1)
+emission_enabled = true
+emission = Color(0.5900293, 0.6140279, 0, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="TorusMesh" id="TorusMesh_jh4n7"]
+material = SubResource("StandardMaterial3D_801vi")
+inner_radius = 0.85
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_801vi"]
+height = 0.1
+radius = 0.855
+
+[node name="Hoop" type="Node3D"]
+script = ExtResource("1_801vi")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("TorusMesh_jh4n7")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_801vi")
