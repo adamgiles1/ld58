@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://c7l0q1s6gpb"]
+
+[ext_resource type="Script" uid="uid://r8tfrh1p5pj8" path="res://ball.gd" id="1_gk6bx"]
+[ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_lww6v"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_lww6v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3tj6u"]
+albedo_texture = ExtResource("2_lww6v")
+
+[sub_resource type="SphereMesh" id="SphereMesh_3tj6u"]
+
+[node name="Ball" type="RigidBody3D"]
+script = ExtResource("1_gk6bx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_lww6v")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_3tj6u")
+mesh = SubResource("SphereMesh_3tj6u")
+skeleton = NodePath("../..")
+
+[node name="UI" type="VBoxContainer" parent="."]
+offset_right = 250.0
+offset_bottom = 182.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HeightBox" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="HeightLabel" type="Label" parent="UI/HeightBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Height
+"
+
+[node name="HeightSlider" type="HSlider" parent="UI/HeightBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.98
+max_value = 2.0
+rounded = true
+scrollable = false
+
+[node name="PowerBox" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="PowerLabel" type="Label" parent="UI/PowerBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Power
+"
+
+[node name="PowerSlider" type="HSlider" parent="UI/PowerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.98
+scrollable = false
+
+[node name="AimBox" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+
+[node name="AimLabel" type="Label" parent="UI/AimBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Aim
+"
+
+[node name="AimSlider" type="HSlider" parent="UI/AimBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.98
+scrollable = false
+
+[node name="ShootButton" type="Button" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Shoot!"
+
+[node name="DebugInfo" type="Label" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 2
