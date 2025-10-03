@@ -19,9 +19,9 @@ func send_data():
 	print("sending data")
 	var headers = ["Content-Type: application/json"]
 	var body = {
-		"value1": 15,
-		"value2": "hello again again",
-		"value3": "theId or is itttt"
+		"value1": 16,
+		"value2": "hello again again FROM ANSON",
+		"value3": "theId or is itttt HI"
 	}
 	var json = JSON.stringify(body)
 	send_data_node.request("https://jkx6qkm4vh.execute-api.us-east-1.amazonaws.com/default/ld58-send-stuff", headers, HTTPClient.METHOD_POST, json)

@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3 uid="uid://muwnhn8smtcy"]
+
+[ext_resource type="PackedScene" uid="uid://c7l0q1s6gpb" path="res://Ball.tscn" id="1_myinc"]
+[ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_njov2"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_njov2"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_2au82"]
+sky_material = SubResource("ProceduralSkyMaterial_njov2")
+
+[sub_resource type="Environment" id="Environment_8tn2x"]
+background_mode = 2
+sky = SubResource("Sky_2au82")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aq4fw"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2au82"]
+albedo_texture = ExtResource("2_njov2")
+
+[sub_resource type="BoxMesh" id="BoxMesh_ivycn"]
+size = Vector3(100, 1, 100)
+
+[node name="Test" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8tn2x")
+
+[node name="Ball" parent="." instance=ExtResource("1_myinc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 3, 5)
+
+[node name="Floor" type="Node3D" parent="."]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+shape = SubResource("BoxShape3D_aq4fw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+material_override = SubResource("StandardMaterial3D_2au82")
+mesh = SubResource("BoxMesh_ivycn")
+skeleton = NodePath("../..")
