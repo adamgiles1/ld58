@@ -64,10 +64,10 @@ physics_material_override = SubResource("PhysicsMaterial_303b4")
 shape = SubResource("ConcavePolygonShape3D_1ih6b")
 
 [node name="Hoop5" parent="." instance=ExtResource("2_lpgdq")]
-transform = Transform3D(2.9802326e-08, -4.3711392e-08, 1.0000001, 1.302701e-15, 1.0000001, 4.3711392e-08, -1, 0, 2.9802322e-08, -3.9, 1.3750001, 3)
+transform = Transform3D(-1, 1.9106857e-15, -1.39090695e-08, 1.3027011e-15, 1.0000001, 4.3711395e-08, 1.3909062e-08, 4.3711395e-08, -1.0000001, -4.7999997, 1.3750001, 2)
 
 [node name="Hoop6" parent="." instance=ExtResource("2_lpgdq")]
-transform = Transform3D(2.9802326e-08, -4.3711392e-08, 1.0000001, 1.302701e-15, 1.0000001, 4.3711392e-08, -1, 0, 2.9802322e-08, -3.9, 1.375, -3)
+transform = Transform3D(-1, 1.9106857e-15, -1.39090695e-08, 1.3027011e-15, 1.0000001, 4.3711395e-08, 1.3909062e-08, 4.3711395e-08, -1.0000001, -4.7999997, 1.375, -2)
 
 [node name="Ball" parent="." instance=ExtResource("3_1jw75")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0556555, 0.050000004, 0.08708856)
@@ -83,7 +83,7 @@ physics_material_override = ExtResource("4_lpgdq")
 shape = SubResource("ConcavePolygonShape3D_3cb6x")
 
 [node name="Wall2" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -6, 0.19999981, 2)
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -6, 0.19999981, 1.5999999)
 mesh = SubResource("BoxMesh_3cb6x")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Wall2"]
@@ -93,7 +93,7 @@ physics_material_override = ExtResource("4_lpgdq")
 shape = SubResource("ConcavePolygonShape3D_lpgdq")
 
 [node name="Wall3" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -6, 0.19999981, -2)
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -6, 0.19999981, -1.5999999)
 mesh = SubResource("BoxMesh_3cb6x")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Wall3"]

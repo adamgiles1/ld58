@@ -135,6 +135,7 @@ func shoot() -> void:
 	apply_impulse(calculate_shot())
 	# Output shot details here
 	path_preview.visible = false
+	Signals.STROKE.emit()
 
 func reset() -> void:
 	reset_velocity_on_next_frame = true
