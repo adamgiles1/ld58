@@ -1,4 +1,20 @@
-[gd_scene load_steps=8 format=3 uid="uid://bxqeeqimqlx0j"]
+[gd_scene load_steps=14 format=3 uid="uid://bxqeeqimqlx0j"]
+
+[ext_resource type="PackedScene" uid="uid://1g3uswvc7gla" path="res://level_pieces/hoop.tscn" id="1_7cdvc"]
+[ext_resource type="PackedScene" uid="uid://r6kgx6q5e22j" path="res://Ball.tscn" id="2_1ih6b"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1ih6b"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_303b4"]
+sky_material = SubResource("ProceduralSkyMaterial_1ih6b")
+
+[sub_resource type="Environment" id="Environment_5j18n"]
+background_mode = 2
+sky = SubResource("Sky_303b4")
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="QuadMesh" id="QuadMesh_ogp8r"]
 size = Vector2(30, 30)
@@ -6,23 +22,33 @@ size = Vector2(30, 30)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7cdvc"]
 albedo_color = Color(0, 0.4759097, 0.04607106, 1)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_303b4"]
+bounce = 0.7
+
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1ih6b"]
 data = PackedVector3Array(15, -15, 0, -15, -15, 0, 15, 15, 0, -15, -15, 0, -15, 15, 0, 15, 15, 0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_303b4"]
 size = Vector3(10, 4, 1)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_1ih6b"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_303b4"]
+data = PackedVector3Array(-5, 2, 0.5, 5, 2, 0.5, -5, -2, 0.5, 5, 2, 0.5, 5, -2, 0.5, -5, -2, 0.5, 5, 2, -0.5, -5, 2, -0.5, 5, -2, -0.5, -5, 2, -0.5, -5, -2, -0.5, 5, -2, -0.5, 5, 2, 0.5, 5, 2, -0.5, 5, -2, 0.5, 5, 2, -0.5, 5, -2, -0.5, 5, -2, 0.5, -5, 2, -0.5, -5, 2, 0.5, -5, -2, -0.5, -5, 2, 0.5, -5, -2, 0.5, -5, -2, -0.5, 5, 2, 0.5, -5, 2, 0.5, 5, 2, -0.5, -5, 2, 0.5, -5, 2, -0.5, 5, 2, -0.5, -5, -2, 0.5, 5, -2, 0.5, -5, -2, -0.5, 5, -2, 0.5, 5, -2, -0.5, -5, -2, -0.5)
+
 [sub_resource type="TextMesh" id="TextMesh_5j18n"]
 text = "Shoot From Here"
 
-[sub_resource type="TorusMesh" id="TorusMesh_ogp8r"]
-inner_radius = 0.4
-outer_radius = 0.5
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ogp8r"]
-albedo_color = Color(1, 0.18431373, 0.34509805, 1)
-
 [node name="Level1" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5j18n")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
@@ -30,24 +56,37 @@ mesh = SubResource("QuadMesh_ogp8r")
 surface_material_override/0 = SubResource("StandardMaterial3D_7cdvc")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+physics_material_override = SubResource("PhysicsMaterial_303b4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_1ih6b")
 
 [node name="Wall" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2, -3.2)
 mesh = SubResource("BoxMesh_303b4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Wall"]
+physics_material_override = SubResource("PhysicsMaterial_1ih6b")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Wall/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_303b4")
 
 [node name="StartPoint" type="MeshInstance3D" parent="."]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -8, 0.3, 0)
 mesh = SubResource("TextMesh_5j18n")
 
-[node name="Hoop" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.70710677, 0.70710677, 3.090862e-08, 0, -4.371139e-08, 1, 0.70710677, -0.70710677, -3.090862e-08, -5, 1, -2)
-mesh = SubResource("TorusMesh_ogp8r")
-surface_material_override/0 = SubResource("StandardMaterial3D_ogp8r")
+[node name="Hoop3" parent="." instance=ExtResource("1_7cdvc")]
+transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -5, 1, -2)
 
-[node name="Hoop2" type="MeshInstance3D" parent="."]
-transform = Transform3D(-0.8660254, 0.49999988, 2.1855694e-08, 2.1175824e-22, -4.371138e-08, 1, 0.49999988, 0.8660254, 3.7855173e-08, -1, 1, -2)
-mesh = SubResource("TorusMesh_ogp8r")
-surface_material_override/0 = SubResource("StandardMaterial3D_ogp8r")
+[node name="Hoop4" parent="." instance=ExtResource("1_7cdvc")]
+transform = Transform3D(0.8660254, 0, 0.49999994, 0, 1, 0, -0.49999994, 0, 0.8660254, -2.9, 1, -2)
+
+[node name="Ball" parent="." instance=ExtResource("2_1ih6b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0556555, 0.050000004, 0.08708856)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10, 1, 0)
+current = true
+
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, -3, 9, 0)
