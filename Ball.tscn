@@ -4,11 +4,14 @@
 [ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_lww6v"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lww6v"]
+radius = 0.05
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3tj6u"]
 albedo_texture = ExtResource("2_lww6v")
 
 [sub_resource type="SphereMesh" id="SphereMesh_3tj6u"]
+radius = 0.05
+height = 0.1
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_lww6v"]
 size = Vector2(0.3, 1)
@@ -18,6 +21,9 @@ cull_mode = 2
 albedo_color = Color(1, 0, 0, 1)
 
 [node name="Ball" type="RigidBody3D"]
+collision_layer = 3
+mass = 0.1
+continuous_cd = true
 script = ExtResource("1_gk6bx")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
