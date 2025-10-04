@@ -1,13 +1,14 @@
-extends Node3D
+class_name GameManager extends Node3D
 
 var hoops_to_hit: int = 0
 var hoops_hit: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	Signals.HOOP_HIT.connect(on_hoop_hit)
-	
-	hoops_to_hit = len(get_tree().get_nodes_in_group("hoop"))
+	var hoops = get_tree().get_nodes_in_group("hoop")
+	hoops_to_hit = len(hoops)
+	for hoop in hoops:
+		hoop.game_manager = self
 	print("Initialized with ", hoops_to_hit, " hoops")
 
 func on_hoop_hit():
