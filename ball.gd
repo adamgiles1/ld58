@@ -20,7 +20,7 @@ func get_height() -> float:
 
 func calculate_shot() -> Vector3:
 	var angle_rad = aim_slider.value * PI/50
-	var power = power_slider.value * 0.01
+	var power = power_slider.value * 0.02
 	return Vector3(sin(angle_rad), get_height(), cos(angle_rad)) * power
 
 func _process(_delta: float) -> void:
