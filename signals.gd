@@ -1,6 +1,7 @@
 extends Node
 
 signal HOOP_HIT
+signal STROKE
 
 var ui_scene = preload("res://ui/GameUI.tscn")
 

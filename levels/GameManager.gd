@@ -3,6 +3,8 @@ class_name GameManager extends Node3D
 var hoops_to_hit: int = 0
 var hoops_hit: int = 0
 
+var strokes: int = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("GAME MANAGER HI")
@@ -11,6 +13,7 @@ func _ready() -> void:
 	for hoop in hoops:
 		hoop.game_manager = self
 	print("Initialized with ", hoops_to_hit, " hoops")
+	Signals.STROKE.connect(on_stroke)
 
 func on_hoop_hit():
 	hoops_hit += 1
@@ -24,6 +27,10 @@ func on_hoop_hit():
 func on_hoop_exist():
 	print("hoop registered")
 	hoops_to_hit += 1
+
+func on_stroke():
+	strokes += 1
+	print("strokes taken: ", strokes)
 
 func load_next_level() -> void:
 	var next_level := Globals.get_next_level()

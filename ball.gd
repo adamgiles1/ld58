@@ -136,6 +136,7 @@ func shoot() -> void:
 	# Output shot details here
 	path_preview.visible = false
 	active_shot = true
+	Signals.STROKE.emit()
 
 func reset() -> void:
 	reset_velocity_on_next_frame = true
