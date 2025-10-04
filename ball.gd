@@ -27,12 +27,11 @@ func calculate_shot() -> Vector3:
 
 func _process(_delta: float) -> void:
 	var shot = calculate_shot()
-	path_preview.position = shot / 2
 	var shot_length = shot.length()
 	if shot_length > 0:
 		path_preview.global_basis = Basis.looking_at(shot)
-	path_preview.scale.z = shot_length
-	path_preview.scale.x = 0.5 + shot_length * 0.2
+	path_preview.mesh.size = Vector2(0.05 + shot_length * 0.02, shot_length)
+	path_preview.mesh.center_offset = Vector3.FORWARD * shot_length * 0.5
 	
 	var info_text = "height: %s\n" % height_slider.value
 	info_text += "power: %s\n" % power_slider.value
@@ -53,6 +52,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 func _shoot_button_is_pressed() -> void:
 	apply_impulse(calculate_shot())
+	# Output shot details here
 	path_preview.visible = false
 
 func reset() -> void:
