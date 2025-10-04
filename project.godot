@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 AwsService="*res://networking/aws_service.gd"
 Signals="*res://signals.gd"
 
+[global_group]
+
+hoop=""
+
 [input]
 
 ResetBall={

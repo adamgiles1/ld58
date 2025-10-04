@@ -1,8 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://b7r2am82lqd8t"]
+[gd_scene load_steps=11 format=3 uid="uid://cds2jtsoeaiuf"]
 
-[ext_resource type="Script" uid="uid://ddxkxj6ikjo8p" path="res://levels/GameManager.gd" id="1_b3oru"]
-[ext_resource type="PackedScene" uid="uid://1g3uswvc7gla" path="res://level_pieces/hoop.tscn" id="1_pdtm5"]
-[ext_resource type="PackedScene" uid="uid://c7l0q1s6gpb" path="res://Ball.tscn" id="2_b3oru"]
+[ext_resource type="Script" uid="uid://ddxkxj6ikjo8p" path="res://levels/GameManager.gd" id="1_qyb5k"]
+[ext_resource type="PackedScene" uid="uid://1g3uswvc7gla" path="res://level_pieces/hoop.tscn" id="2_py88r"]
+[ext_resource type="PackedScene" uid="uid://c7l0q1s6gpb" path="res://Ball.tscn" id="3_g1dg4"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1ih6b"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -30,7 +30,7 @@ bounce = 0.7
 data = PackedVector3Array(15, -15, 0, -15, -15, 0, 15, 15, 0, -15, -15, 0, -15, 15, 0, 15, 15, 0)
 
 [node name="Level1" type="Node3D"]
-script = ExtResource("1_b3oru")
+script = ExtResource("1_qyb5k")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -50,16 +50,16 @@ physics_material_override = SubResource("PhysicsMaterial_303b4")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_1ih6b")
 
-[node name="Hoop4" parent="." instance=ExtResource("1_pdtm5")]
-transform = Transform3D(2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, 2.9802322e-08, -2.9, 3, 0)
+[node name="Hoop4" parent="." instance=ExtResource("2_py88r")]
+transform = Transform3D(2.8857993e-08, -0.24973787, 0.9683136, 7.4427686e-09, 0.9683136, 0.24973787, -1, 0, 2.9802322e-08, -2.9, 3.9, 0)
 
-[node name="Hoop5" parent="." instance=ExtResource("1_pdtm5")]
-transform = Transform3D(2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, 2.9802322e-08, -2.9, 3, -5)
+[node name="Hoop5" parent="." instance=ExtResource("2_py88r")]
+transform = Transform3D(2.8786832e-08, -0.25881904, 0.9659258, 7.713409e-09, 0.9659258, 0.25881904, -1, 0, 2.9802322e-08, -3.9, 3, 0)
 
-[node name="Hoop6" parent="." instance=ExtResource("1_pdtm5")]
-transform = Transform3D(2.9802322e-08, 0, 1, 0, 1, 0, -1, 0, 2.9802322e-08, -2.9, 3, 5)
+[node name="Hoop6" parent="." instance=ExtResource("2_py88r")]
+transform = Transform3D(2.8786832e-08, -0.25881904, 0.9659258, 7.713409e-09, 0.9659258, 0.25881904, -1, 0, 2.9802322e-08, -1.9000001, 5.1, 0)
 
-[node name="Ball" parent="." instance=ExtResource("2_b3oru")]
+[node name="Ball" parent="." instance=ExtResource("3_g1dg4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0556555, 0.050000004, 0.08708856)
 
 [node name="Camera3D" type="Camera3D" parent="."]

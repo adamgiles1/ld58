@@ -14,7 +14,7 @@ data = PackedVector3Array(-0.083299994, 0, -0.8459, 0, 0.014599999, -0.85139996,
 height = 0.1
 radius = 0.855
 
-[node name="Hoop" type="Node3D"]
+[node name="Hoop" type="Node3D" groups=["hoop"]]
 script = ExtResource("1_801vi")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
