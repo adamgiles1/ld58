@@ -14,7 +14,8 @@ radius = 0.05
 height = 0.1
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_lww6v"]
-size = Vector2(0.3, 1)
+size = Vector2(0.3, 2)
+center_offset = Vector3(0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lww6v"]
 cull_mode = 2
@@ -35,10 +36,9 @@ mesh = SubResource("SphereMesh_3tj6u")
 skeleton = NodePath("../..")
 
 [node name="UI" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(800, 0)
 offset_right = 250.0
 offset_bottom = 182.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="HeightBox" type="HBoxContainer" parent="UI"]
 layout_mode = 2
@@ -101,6 +101,5 @@ layout_mode = 2
 
 [node name="PathPreview" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
 mesh = SubResource("PlaneMesh_lww6v")
 surface_material_override/0 = SubResource("StandardMaterial3D_lww6v")
