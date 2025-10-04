@@ -5,6 +5,7 @@ var hoops_hit: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print("GAME MANAGER HI")
 	var hoops = get_tree().get_nodes_in_group("hoop")
 	hoops_to_hit = len(hoops)
 	for hoop in hoops:

@@ -72,14 +72,6 @@ transform = Transform3D(2.9802326e-08, -4.3711392e-08, 1.0000001, 1.302701e-15, 
 [node name="Ball" parent="." instance=ExtResource("3_1jw75")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0556555, 0.050000004, 0.08708856)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10, 1, 0)
-current = true
-fov = 60.0
-
-[node name="Camera3D2" type="Camera3D" parent="."]
-transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, -3, 9, 0)
-
 [node name="Wall" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, -5, 1.1999998, 0)
 mesh = SubResource("BoxMesh_3cb6x")
