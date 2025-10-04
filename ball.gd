@@ -20,6 +20,8 @@ const height_values = [.25, .5, 1.0]
 
 var shot_charge = 0
 
+var active_shot = false
+
 var reset_point: Vector3
 var reset_velocity_on_next_frame := false
 var last_frame_position: Vector3
@@ -28,14 +30,13 @@ func _ready() -> void:
 	shoot_button.pressed.connect(_shoot_button_is_pressed)
 	reset_point = global_position
 	Engine.time_scale = 0.5
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	last_frame_position = global_position
 
 func get_height() -> float:
 	return height_values[height_select]
 
 func calculate_shot() -> Vector3:
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if GameUI.paused:
 		var angle_rad = aim_slider.value * PI/50
 		var power = power_slider.value * 0.02
 		return Vector3(sin(angle_rad), get_height(), cos(angle_rad)) * power
@@ -61,6 +62,7 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_released("Shoot"):
 		shoot()
 		shot_charge = 0
+		active_shot = true
 	
 	var shot = calculate_shot()
 	var shot_length = shot.length()
@@ -87,11 +89,9 @@ func _process(delta: float) -> void:
 	flat_rot += Vector3.UP * cam_height
 	ball_cam.global_position = global_position + flat_rot.normalized() * cam_zoom
 	ball_cam.look_at(global_position)
-	if Input.is_action_just_pressed("ui_cancel"):
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	if active_shot and (global_position.y < -5): #Better conditions here for when a shot is basically over
+		GameUI.instance.reset_reminder.visible = true
 		
 func _input(event: InputEvent) -> void:
 	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
@@ -135,7 +135,10 @@ func shoot() -> void:
 	apply_impulse(calculate_shot())
 	# Output shot details here
 	path_preview.visible = false
+	active_shot = true
 
 func reset() -> void:
 	reset_velocity_on_next_frame = true
 	path_preview.visible = true
+	active_shot = false
+	GameUI.instance.reset_reminder.visible = false

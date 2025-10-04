@@ -42,6 +42,7 @@ mesh = SubResource("SphereMesh_3tj6u")
 skeleton = NodePath("../..")
 
 [node name="UI" type="VBoxContainer" parent="."]
+visible = false
 custom_minimum_size = Vector2(800, 0)
 offset_right = 250.0
 offset_bottom = 182.0
