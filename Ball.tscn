@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://c7l0q1s6gpb"]
+[gd_scene load_steps=9 format=3 uid="uid://c7l0q1s6gpb"]
 
 [ext_resource type="Script" uid="uid://r8tfrh1p5pj8" path="res://ball.gd" id="1_gk6bx"]
+[ext_resource type="PackedScene" uid="uid://bfthb64dpekyo" path="res://models/bubbo.glb" id="2_3tj6u"]
 [ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_lww6v"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lww6v"]
@@ -27,10 +28,14 @@ mass = 0.1
 continuous_cd = true
 script = ExtResource("1_gk6bx")
 
+[node name="bubbo" parent="." instance=ExtResource("2_3tj6u")]
+transform = Transform3D(-1.3113416e-09, 0, -0.03, 0, 0.03, 0, 0.03, 0, -1.3113416e-09, 0, 0, 0)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_lww6v")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 material_override = SubResource("StandardMaterial3D_3tj6u")
 mesh = SubResource("SphereMesh_3tj6u")
 skeleton = NodePath("../..")
@@ -88,6 +93,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.98
+step = 0.25
 scrollable = false
 
 [node name="ShootButton" type="Button" parent="UI"]

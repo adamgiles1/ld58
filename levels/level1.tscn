@@ -65,6 +65,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0556555, 0.050000004, 0.08
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -10, 1, 0)
 current = true
+fov = 60.0
 
 [node name="Camera3D2" type="Camera3D" parent="."]
 transform = Transform3D(1.9106855e-15, 1, 4.371139e-08, 4.371139e-08, -4.371139e-08, 1, 1, 0, -4.371139e-08, -3, 9, 0)

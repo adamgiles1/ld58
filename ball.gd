@@ -12,10 +12,12 @@ extends RigidBody3D
 const height_values = [.25, .5, 1.0]
 var reset_point: Vector3
 var reset_velocity_on_next_frame := false
+var last_frame_position: Vector3
 
 func _ready() -> void:
 	shoot_button.pressed.connect(_shoot_button_is_pressed)
 	reset_point = global_position
+	last_frame_position = global_position
 
 func get_height() -> float:
 	return height_values[height_slider.value]
@@ -49,6 +51,20 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.linear_velocity = Vector3.ZERO
 		state.angular_velocity = Vector3.ZERO
 		global_position = reset_point
+	
+	
+	# ray cast from last position to current position to check if we hit a hoop
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(last_frame_position, global_position)
+	query.collide_with_areas = true
+	query.collision_mask = 4
+	var ray_result = space_state.intersect_ray(query)
+	if ray_result:
+		var collider = ray_result.collider
+		print("hit hoop")
+		collider.get_owner().on_ball_collide(self)
+	
+	last_frame_position = global_position
 
 func _shoot_button_is_pressed() -> void:
 	apply_impulse(calculate_shot())

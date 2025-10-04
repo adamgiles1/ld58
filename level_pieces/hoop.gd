@@ -6,15 +6,17 @@ var material: StandardMaterial3D
 
 var is_hit: bool = false
 
+var game_manager: GameManager
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	material = mesh.get_active_material(0)
-	area.body_entered.connect(on_ball_collide)
+	#area.body_entered.connect(on_ball_collide)
 
 func on_ball_collide(body: Node3D):
 	if is_hit:
 		return
 	print("ball hit ring")
 	is_hit = true
-	Signals.HOOP_HIT.emit()
+	game_manager.on_hoop_hit()
 	mesh.material_override = preload("res://level_pieces/hoop_material_hit.tres")
