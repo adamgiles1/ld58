@@ -30,6 +30,7 @@ var left_flipper_tween
 var right_flipper_tween
 
 @onready var shot_sound: AudioStreamPlayer = $ShotSound
+@onready var powering_up_sound: AudioStreamPlayer = $PoweringSound
 
 var cam_offset = Vector3(0, 1, 2)
 var cam_angle = 0
@@ -104,11 +105,11 @@ func _process(delta: float) -> void:
 			active_shot = true
 	
 	if shot_charge != 0:
-		print("shot charge: ", abs(sin(shot_charge * 5)))
-		shot_sound.pitch_scale = abs(sin(shot_charge * 5))
-		shot_sound.play()
+		powering_up_sound.pitch_scale = abs(sin(shot_charge * 5)) / 2
+		powering_up_sound.volume_db = -5
+		powering_up_sound.play()
 	else:
-		shot_sound.stop()
+		powering_up_sound.stop()
 	
 	var shot = calculate_shot()
 	var shot_length = shot.length()
@@ -196,6 +197,7 @@ func shoot() -> void:
 	path_preview.visible = false
 	active_shot = true
 	Signals.STROKE.emit(velocity, global_position)
+	$ShotSound.play()
 
 func ghost_shoot(shot_vel: Vector3) -> void:
 	print("ghost velocity: ", shot_vel)
@@ -206,6 +208,7 @@ func ghost_shoot(shot_vel: Vector3) -> void:
 	tween.tween_callback(apply_impulse.bind(shot_vel))
 	tween.tween_callback(apply_torque.bind(-global_basis.x * shot_length * 0.03))
 	set_shot_anim(0.1)
+	$ShotSound.play()
 	
 	#apply_impulse.(shot_vel)
 	#apply_torque(-global_basis.x * shot_vel.length() * 0.3)
