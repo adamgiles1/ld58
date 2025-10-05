@@ -1,8 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://c7l0q1s6gpb"]
+[gd_scene load_steps=11 format=3 uid="uid://c7l0q1s6gpb"]
 
 [ext_resource type="Script" uid="uid://r8tfrh1p5pj8" path="res://ball.gd" id="1_gk6bx"]
 [ext_resource type="PackedScene" uid="uid://bfthb64dpekyo" path="res://models/bubbo.glb" id="2_3tj6u"]
 [ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_lww6v"]
+[ext_resource type="PackedScene" uid="uid://d0maqe4u6cgwm" path="res://models/turtle.glb" id="2_sr3km"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_sr3km"]
+friction = 0.5
+rough = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lww6v"]
 radius = 0.05
@@ -26,11 +31,23 @@ albedo_color = Color(1, 0, 0, 1)
 [node name="Ball" type="RigidBody3D"]
 collision_layer = 3
 mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_sr3km")
 continuous_cd = true
+angular_damp = 3.0
 script = ExtResource("1_gk6bx")
+
+[node name="Turtle" parent="." instance=ExtResource("2_sr3km")]
+transform = Transform3D(-0.05, 0, 7.54979e-09, 0, 0.05, 0, -7.54979e-09, 0, -0.05, 0, 0, 0)
+
+[node name="LeftFlipperOrigin" parent="Turtle/Body" index="0"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.14251609, 0.22802576, 0.662232)
+
+[node name="RightFlipperOrigin" parent="Turtle/Body" index="3"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.14251615, 0.22802576, -0.6622316)
 
 [node name="bubbo" parent="." instance=ExtResource("2_3tj6u")]
 transform = Transform3D(-1.3113416e-09, 0, -0.03, 0, 0.03, 0, 0.03, 0, -1.3113416e-09, 0, 0, 0)
+visible = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_lww6v")
@@ -101,4 +118,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35834348, 0.61558175)
 top_level = true
 fov = 60.0
 
+[editable path="Turtle"]
 [editable path="bubbo"]

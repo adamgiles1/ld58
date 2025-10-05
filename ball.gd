@@ -9,7 +9,25 @@ class_name Ball extends RigidBody3D
 @onready var path_preview = %PathPreview
 @onready var ball_cam = %BallCam
 
-@onready var model_meshes: Array[MeshInstance3D] = [$bubbo/Sphere, $bubbo/Sphere_001, $bubbo/Sphere_004, $bubbo/Sphere_004/Sphere_002, $bubbo/Sphere_004/Sphere_003]
+@onready var model_meshes = [
+		$Turtle/Body,
+		$Turtle/Body/NeckOrigin/Neck,
+		$Turtle/Body/NeckOrigin/Neck/HeadOrigin/Head,
+		$Turtle/Body/LeftFlipperOrigin/LeftFlipper,
+		$Turtle/Body/RightFlipperOrigin/RightFlipper,
+		$Turtle/Body/LeftFootOrigin/LeftFoot,
+		$Turtle/Body/RightFootOrigin/RightFoot
+	]
+
+@onready var neck_origin = $Turtle/Body/NeckOrigin
+@onready var head_origin = $Turtle/Body/NeckOrigin/Neck/HeadOrigin
+@onready var left_flipper_origin = $Turtle/Body/LeftFlipperOrigin
+@onready var right_flipper_origin = $Turtle/Body/RightFlipperOrigin
+@onready var left_foot_origin = $Turtle/Body/LeftFootOrigin
+@onready var right_foot_origin = $Turtle/Body/RightFootOrigin
+
+var left_flipper_tween
+var right_flipper_tween
 
 var cam_offset = Vector3(0, 1, 2)
 var cam_angle = 0
@@ -39,6 +57,7 @@ func _ready() -> void:
 		reset_point = global_position
 		Engine.time_scale = 0.5
 		last_frame_position = global_position
+		set_idle_anim()
 
 func get_height() -> float:
 	return height_values[height_select]
@@ -49,11 +68,11 @@ func calculate_shot() -> Vector3:
 		var power = power_slider.value * 0.02
 		return Vector3(sin(angle_rad), get_height(), cos(angle_rad)) * power
 	else:
-		var power = abs(sin(shot_charge * 5))
+		var power = get_charge_power(shot_charge)
 		var flat_rot = -ball_cam.global_basis.z
 		flat_rot.y = 0
 		flat_rot = flat_rot.normalized()
-		return (flat_rot + Vector3.UP * get_height()) * power
+		return (flat_rot + Vector3.UP * get_height()).normalized() * power * 1.5
 
 func _process(delta: float) -> void:
 	if is_ghost:
@@ -73,6 +92,7 @@ func _process(delta: float) -> void:
 	if !active_shot:
 		if Input.is_action_pressed("Shoot"):
 			shot_charge += delta
+			set_charge_anim(get_charge_power(shot_charge))
 		if Input.is_action_just_released("Shoot"):
 			shoot()
 			shot_charge = 0
@@ -82,7 +102,8 @@ func _process(delta: float) -> void:
 	var shot_length = shot.length()
 	if shot_length > 0:
 		# path_preview.global_basis = Basis.looking_at(shot)
-		look_at(global_position + shot)
+		look_at(global_position + Vector3(shot.x, 0, shot.z))
+		path_preview.look_at(global_position + shot)
 	path_preview.mesh.size = Vector2(0.05 + shot_length * 0.02, shot_length)
 	path_preview.mesh.center_offset = Vector3.FORWARD * shot_length * 0.5
 	
@@ -152,8 +173,13 @@ func _shoot_button_is_pressed() -> void:
 func shoot() -> void:
 	var velocity = calculate_shot()
 	print("shot velocity: ", velocity)
-	apply_impulse(velocity)
-	apply_torque(-global_basis.x * velocity.length() * 0.3)
+	var shot_length = velocity.length()
+	
+	var tween = create_tween()
+	tween.tween_interval(0.05)
+	tween.tween_callback(apply_impulse.bind(velocity))
+	tween.tween_callback(apply_torque.bind(-global_basis.x * shot_length * 0.03))
+	set_shot_anim(0.1)
 	# Output shot details here
 	path_preview.visible = false
 	active_shot = true
@@ -161,10 +187,13 @@ func shoot() -> void:
 
 func ghost_shoot(shot_vel: Vector3) -> void:
 	print("ghost velocity: ", shot_vel)
+	var shot_length = shot_vel.length()
+	set_charge_anim(shot_length / 1.5)
 	var tween = create_tween()
-	tween.tween_interval(0.01)
+	tween.tween_interval(0.05)
 	tween.tween_callback(apply_impulse.bind(shot_vel))
-	tween.tween_callback(apply_torque.bind(-global_basis.x * shot_vel.length() * 0.3))
+	tween.tween_callback(apply_torque.bind(-global_basis.x * shot_length * 0.03))
+	set_shot_anim(0.1)
 	
 	#apply_impulse.(shot_vel)
 	#apply_torque(-global_basis.x * shot_vel.length() * 0.3)
@@ -173,7 +202,12 @@ func reset() -> void:
 	reset_velocity_on_next_frame = true
 	path_preview.visible = true
 	active_shot = false
+	set_idle_anim()
 	GameUI.instance.reset_reminder.visible = false
+	if left_flipper_tween:
+		left_flipper_tween.kill()
+	if right_flipper_tween:
+		right_flipper_tween.kill()
 
 func set_as_ghost(shot_vel: Vector3) -> void:
 	collision_layer = 8
@@ -190,3 +224,31 @@ func set_as_ghost(shot_vel: Vector3) -> void:
 		color.a = .2
 		material.albedo_color = color
 		mesh.set_surface_override_material(0, material)
+		
+		
+func get_charge_power(charge: float) -> float:
+	return abs(sin(charge * 5))
+		
+func set_idle_anim() -> void:
+	left_flipper_origin.rotation_degrees = Vector3(0, -90, 0)
+	right_flipper_origin.rotation_degrees = Vector3(0, -90, 0)
+
+func set_charge_anim(power: float) -> void:
+	left_flipper_origin.rotation_degrees = Vector3(10 + 160 * pow(1 - power, 3), -90, 70)
+	right_flipper_origin.rotation_degrees = Vector3(10 + 160 * pow(1 - power, 3), -90, -70)
+
+func set_shot_anim(flick_duration: float) -> void:
+	if left_flipper_tween:
+		left_flipper_tween.kill()
+	left_flipper_tween = create_tween()
+	left_flipper_tween.tween_property(left_flipper_origin, "rotation_degrees", Vector3(170, -90, 70), flick_duration).set_trans(Tween.TRANS_EXPO)
+	left_flipper_tween.tween_interval(0.1)
+	left_flipper_tween.tween_property(left_flipper_origin, "rotation_degrees", Vector3(0, -90, 0), 0.1)
+	
+	if right_flipper_tween:
+		right_flipper_tween.kill()
+	right_flipper_tween = create_tween()
+	right_flipper_tween.tween_property(right_flipper_origin, "rotation_degrees", Vector3(170, -90, -70), flick_duration).set_trans(Tween.TRANS_EXPO)
+	right_flipper_tween.tween_interval(0.1)
+	right_flipper_tween.tween_property(right_flipper_origin, "rotation_degrees", Vector3(0, -90, 0), 0.1)
+	
