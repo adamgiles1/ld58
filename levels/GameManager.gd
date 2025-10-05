@@ -65,6 +65,8 @@ func on_hoop_hit():
 			shots_to_send.append(stroke_stats.pop_back())
 		AwsService.send_strokes(shots_to_send)
 		
+		Signals.LEVEL_COMPLETE.emit(Globals.get_current_level_id(), strokes)
+		
 		await get_tree().create_timer(1.0).timeout
 		load_next_level()
 
@@ -81,6 +83,7 @@ func on_stroke(velocity: Vector3, from: Vector3):
 func load_next_level() -> void:
 	var next_level := Globals.get_next_level()
 	get_tree().change_scene_to_packed(next_level)
+	GameUI.level_loaded()
 
 func spawn_ghost_ball(velocity: Vector3, from: Vector3) -> void:
 	print("spawning ghostball with velocity: ", velocity, "from: ", from)

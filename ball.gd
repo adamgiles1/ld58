@@ -45,6 +45,7 @@ const height_values = [.25, .5, 1.0]
 var shot_charge = 0
 
 var active_shot = false
+var active_timer = 0
 
 var reset_point: Vector3
 var reset_velocity_on_next_frame := false
@@ -56,13 +57,13 @@ var ghost_init := false
 var ghost_vel: Vector3
 
 func _ready() -> void:
-	if !is_ghost:
-		shoot_button.pressed.connect(_shoot_button_is_pressed)
-		reset_point = global_position
-		Engine.time_scale = 0.5
-		last_frame_position = global_position
-		set_idle_anim()
-		body_entered.connect(on_body_entered)
+	# is_ghost doesn't work here :(
+	shoot_button.pressed.connect(_shoot_button_is_pressed)
+	reset_point = global_position
+	Engine.time_scale = 0.5
+	last_frame_position = global_position
+	set_idle_anim()
+	body_entered.connect(on_body_entered)
 
 func get_height() -> float:
 	return height_values[height_select]
@@ -81,6 +82,9 @@ func calculate_shot() -> Vector3:
 
 func _process(delta: float) -> void:
 	if is_ghost:
+		active_timer += delta
+		if active_timer > 10:
+			queue_free()
 		if ghost_init:
 			ghost_init = false
 			ghost_shoot(ghost_vel)
@@ -90,19 +94,22 @@ func _process(delta: float) -> void:
 		height_select += 1
 		if height_select >= len(height_values):
 			height_select = 0
+		set_stroke_height_label()
 	if Input.is_action_just_pressed("HeightDown"):
 		height_select -= 1
 		if height_select < 0:
 			height_select += len(height_values)
+		set_stroke_height_label()
 		
-	if !active_shot:
+	if !active_shot and !GameUI.paused:
 		if Input.is_action_pressed("Shoot"):
 			shot_charge += delta
 			set_charge_anim(get_charge_power(shot_charge))
 		if Input.is_action_just_released("Shoot"):
 			shoot()
 			shot_charge = 0
-			active_shot = true
+	else:
+		active_timer += delta
 	
 	if shot_charge != 0:
 		powering_up_sound.pitch_scale = abs(sin(shot_charge * 5)) / 2
@@ -139,7 +146,7 @@ func _process(delta: float) -> void:
 	ball_cam.global_position = global_position + flat_rot.normalized() * cam_zoom
 	ball_cam.look_at(global_position + Vector3.UP * cam_zoom * 0.3)
 	
-	if active_shot and (global_position.y < -5): #Better conditions here for when a shot is basically over
+	if active_shot and (global_position.y < -5 or active_timer > 5): #Better conditions here for when a shot is basically over
 		GameUI.instance.reset_reminder.visible = true
 		
 func _input(event: InputEvent) -> void:
@@ -196,6 +203,7 @@ func shoot() -> void:
 	# Output shot details here
 	path_preview.visible = false
 	active_shot = true
+	active_timer = 0
 	Signals.STROKE.emit(velocity, global_position)
 	$ShotSound.play()
 
@@ -276,3 +284,12 @@ func on_body_entered(body: Node) -> void:
 	$HitSound.pitch_scale = randf_range(.8, 1.2)
 	$HitSound.play()
 	time_since_last_bump = 0.0
+
+func set_stroke_height_label() -> void:
+	match height_select:
+		0:
+			GameUI.set_stroke_height("Low")
+		1:
+			GameUI.set_stroke_height("Medium")
+		2:
+			GameUI.set_stroke_height("High")
