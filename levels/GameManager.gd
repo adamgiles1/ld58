@@ -9,6 +9,7 @@ var strokes: int = 0
 var stroke_stats: Array[StrokeInfo] = []
 
 var ghost_shots: Array[StrokeInfo] = []
+var next_ghost_idx: int = 0
 var time_till_next_ghost := 2.0
 
 # Called when the node enters the scene tree for the first time.
@@ -28,9 +29,13 @@ func _process(delta: float) -> void:
 		spawn_ghost_ball(Vector3(3, 1, 1), Vector3(0, 0, 0)) # todo remove
 	time_till_next_ghost -= delta
 	if time_till_next_ghost <= 0 && len(ghost_shots) > 0:
-		var ghost = ghost_shots.pop_back()
+		if next_ghost_idx >= ghost_shots.size():
+			ghost_shots.shuffle()
+			next_ghost_idx = 0
+		var ghost = ghost_shots[next_ghost_idx]
+		next_ghost_idx += 1
 		spawn_ghost_ball(ghost.velocity, ghost.from)
-		time_till_next_ghost = 5.0
+		time_till_next_ghost = randf_range(1.0, 5.0)
 
 func get_ghosts():
 	AwsService.get_ghosts(Globals.get_current_level_id())

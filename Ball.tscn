@@ -3,11 +3,14 @@
 [ext_resource type="Script" uid="uid://r8tfrh1p5pj8" path="res://ball.gd" id="1_gk6bx"]
 [ext_resource type="PackedScene" uid="uid://bfthb64dpekyo" path="res://models/bubbo.glb" id="2_3tj6u"]
 [ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_lww6v"]
+<<<<<<< HEAD
 [ext_resource type="PackedScene" uid="uid://d0maqe4u6cgwm" path="res://models/turtle.glb" id="2_sr3km"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_sr3km"]
 friction = 0.5
 rough = true
+[ext_resource type="AudioStream" uid="uid://d32s0ljpiq7by" path="res://audio/hit-sound.wav" id="4_sr3km"]
+[ext_resource type="AudioStream" uid="uid://dd1u2nbwfs885" path="res://audio/blipSelect.wav" id="5_oly7h"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_lww6v"]
 radius = 0.05
@@ -34,6 +37,8 @@ mass = 0.1
 physics_material_override = SubResource("PhysicsMaterial_sr3km")
 continuous_cd = true
 angular_damp = 3.0
+contact_monitor = true
+max_contacts_reported = 1
 script = ExtResource("1_gk6bx")
 
 [node name="Turtle" parent="." instance=ExtResource("2_sr3km")]
@@ -119,4 +124,10 @@ top_level = true
 fov = 60.0
 
 [editable path="Turtle"]
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_sr3km")
+
+[node name="ShotSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_oly7h")
+
 [editable path="bubbo"]

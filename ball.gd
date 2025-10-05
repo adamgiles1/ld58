@@ -29,6 +29,8 @@ class_name Ball extends RigidBody3D
 var left_flipper_tween
 var right_flipper_tween
 
+@onready var shot_sound: AudioStreamPlayer = $ShotSound
+
 var cam_offset = Vector3(0, 1, 2)
 var cam_angle = 0
 var cam_height = 0.5
@@ -46,6 +48,7 @@ var active_shot = false
 var reset_point: Vector3
 var reset_velocity_on_next_frame := false
 var last_frame_position: Vector3
+var time_since_last_bump := 0.0
 
 var is_ghost := false
 var ghost_init := false
@@ -58,6 +61,7 @@ func _ready() -> void:
 		Engine.time_scale = 0.5
 		last_frame_position = global_position
 		set_idle_anim()
+		body_entered.connect(on_body_entered)
 
 func get_height() -> float:
 	return height_values[height_select]
@@ -80,6 +84,7 @@ func _process(delta: float) -> void:
 			ghost_init = false
 			ghost_shoot(ghost_vel)
 		return
+	time_since_last_bump += delta
 	if Input.is_action_just_pressed("HeightUp"):
 		height_select += 1
 		if height_select >= len(height_values):
@@ -97,6 +102,13 @@ func _process(delta: float) -> void:
 			shoot()
 			shot_charge = 0
 			active_shot = true
+	
+	if shot_charge != 0:
+		print("shot charge: ", abs(sin(shot_charge * 5)))
+		shot_sound.pitch_scale = abs(sin(shot_charge * 5))
+		shot_sound.play()
+	else:
+		shot_sound.stop()
 	
 	var shot = calculate_shot()
 	var shot_length = shot.length()
@@ -215,6 +227,7 @@ func set_as_ghost(shot_vel: Vector3) -> void:
 	ghost_init = true
 	ghost_vel = shot_vel
 	path_preview.visible = false
+	body_entered.disconnect(on_body_entered)
 	
 	for mesh in model_meshes:
 		var material: StandardMaterial3D = mesh.get_active_material(0)
@@ -224,7 +237,6 @@ func set_as_ghost(shot_vel: Vector3) -> void:
 		color.a = .2
 		material.albedo_color = color
 		mesh.set_surface_override_material(0, material)
-		
 		
 func get_charge_power(charge: float) -> float:
 	return abs(sin(charge * 5))
@@ -251,4 +263,13 @@ func set_shot_anim(flick_duration: float) -> void:
 	right_flipper_tween.tween_property(right_flipper_origin, "rotation_degrees", Vector3(170, -90, -70), flick_duration).set_trans(Tween.TRANS_EXPO)
 	right_flipper_tween.tween_interval(0.1)
 	right_flipper_tween.tween_property(right_flipper_origin, "rotation_degrees", Vector3(0, -90, 0), 0.1)
-	
+
+func on_body_entered(body: Node) -> void:
+	if is_ghost || body is Ball:
+		return
+	print("hit something: ", body)
+	if time_since_last_bump < .1:
+		return
+	$HitSound.pitch_scale = randf_range(.8, 1.2)
+	$HitSound.play()
+	time_since_last_bump = 0.0
