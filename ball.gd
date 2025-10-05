@@ -11,6 +11,7 @@ class_name Ball extends RigidBody3D
 
 @onready var model_meshes: Array[MeshInstance3D] = [$bubbo/Sphere, $bubbo/Sphere_001, $bubbo/Sphere_004, $bubbo/Sphere_004/Sphere_002, $bubbo/Sphere_004/Sphere_003]
 @onready var shot_sound: AudioStreamPlayer = $ShotSound
+@onready var powering_up_sound: AudioStreamPlayer = $PoweringSound
 
 var cam_offset = Vector3(0, 1, 2)
 var cam_angle = 0
@@ -83,11 +84,11 @@ func _process(delta: float) -> void:
 			active_shot = true
 	
 	if shot_charge != 0:
-		print("shot charge: ", abs(sin(shot_charge * 5)))
-		shot_sound.pitch_scale = abs(sin(shot_charge * 5))
-		shot_sound.play()
+		powering_up_sound.pitch_scale = abs(sin(shot_charge * 5)) / 2
+		powering_up_sound.volume_db = -5
+		powering_up_sound.play()
 	else:
-		shot_sound.stop()
+		powering_up_sound.stop()
 	
 	var shot = calculate_shot()
 	var shot_length = shot.length()
@@ -169,6 +170,7 @@ func shoot() -> void:
 	path_preview.visible = false
 	active_shot = true
 	Signals.STROKE.emit(velocity, global_position)
+	$ShotSound.play()
 
 func ghost_shoot(shot_vel: Vector3) -> void:
 	print("ghost velocity: ", shot_vel)
@@ -176,6 +178,7 @@ func ghost_shoot(shot_vel: Vector3) -> void:
 	tween.tween_interval(0.01)
 	tween.tween_callback(apply_impulse.bind(shot_vel))
 	tween.tween_callback(apply_torque.bind(-global_basis.x * shot_vel.length() * 0.3))
+	$ShotSound.play()
 	
 	#apply_impulse.(shot_vel)
 	#apply_torque(-global_basis.x * shot_vel.length() * 0.3)
