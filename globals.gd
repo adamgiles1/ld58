@@ -19,3 +19,6 @@ static func get_next_level() -> PackedScene:
 	print("cannot find next level, returning first level")
 	current_level = 0
 	return levels[current_level]
+
+static func get_current_level_id() -> int:
+	return current_level

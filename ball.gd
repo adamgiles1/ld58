@@ -141,11 +141,12 @@ func _shoot_button_is_pressed() -> void:
 	shoot()
 	
 func shoot() -> void:
-	apply_impulse(calculate_shot())
+	var velocity = calculate_shot()
+	apply_impulse(velocity)
 	# Output shot details here
 	path_preview.visible = false
 	active_shot = true
-	Signals.STROKE.emit()
+	Signals.STROKE.emit(velocity, global_position)
 
 func ghost_shoot(shot_vel: Vector3) -> void:
 	apply_impulse(shot_vel)

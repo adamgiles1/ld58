@@ -1,7 +1,7 @@
 extends Node
 
 signal HOOP_HIT
-signal STROKE
+signal STROKE(velocity: Vector3, from: Vector3)
 
 var ui_scene = preload("res://ui/GameUI.tscn")
 
