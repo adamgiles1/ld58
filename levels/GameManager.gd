@@ -1,5 +1,7 @@
 class_name GameManager extends Node3D
 
+var ball_scn: PackedScene = load("res://Ball.tscn")
+
 var hoops_to_hit: int = 0
 var hoops_hit: int = 0
 
@@ -14,6 +16,10 @@ func _ready() -> void:
 		hoop.game_manager = self
 	print("Initialized with ", hoops_to_hit, " hoops")
 	Signals.STROKE.connect(on_stroke)
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("ui_cut"):
+		spawn_ghost_ball(Vector3(3, 1, 1))
 
 func on_hoop_hit():
 	hoops_hit += 1
@@ -35,3 +41,10 @@ func on_stroke():
 func load_next_level() -> void:
 	var next_level := Globals.get_next_level()
 	get_tree().change_scene_to_packed(next_level)
+
+func spawn_ghost_ball(velocity: Vector3) -> void:
+	print("spawning ghostball with velocity: ", velocity)
+	var ghost: Ball = ball_scn.instantiate()
+	add_child(ghost)
+	ghost.set_as_ghost(velocity)
+	ghost.global_position = Vector3(-8.056, .2, 0)

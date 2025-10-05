@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://drm3d3y764yhg"]
 
-[ext_resource type="Script" uid="uid://ddxkxj6ikjo8p" path="res://levels/GameManager.gd" id="1_3cb6x"]
+[ext_resource type="Script" uid="uid://ddxkxj6ikjo8p" path="res://levels/GameManager.gd" id="1_lpgdq"]
 [ext_resource type="PackedScene" uid="uid://1g3uswvc7gla" path="res://level_pieces/hoop.tscn" id="2_lpgdq"]
 [ext_resource type="PackedScene" uid="uid://c7l0q1s6gpb" path="res://Ball.tscn" id="3_1jw75"]
 [ext_resource type="PhysicsMaterial" uid="uid://ccv7y2wme3x26" path="res://levels/bounce_physics_mat.tres" id="4_lpgdq"]
@@ -42,8 +42,8 @@ data = PackedVector3Array(-0.5, 1.5, 0.5, 0.5, 1.5, 0.5, -0.5, -1.5, 0.5, 0.5, 1
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1jw75"]
 data = PackedVector3Array(-0.5, 1.5, 0.5, 0.5, 1.5, 0.5, -0.5, -1.5, 0.5, 0.5, 1.5, 0.5, 0.5, -1.5, 0.5, -0.5, -1.5, 0.5, 0.5, 1.5, -0.5, -0.5, 1.5, -0.5, 0.5, -1.5, -0.5, -0.5, 1.5, -0.5, -0.5, -1.5, -0.5, 0.5, -1.5, -0.5, 0.5, 1.5, 0.5, 0.5, 1.5, -0.5, 0.5, -1.5, 0.5, 0.5, 1.5, -0.5, 0.5, -1.5, -0.5, 0.5, -1.5, 0.5, -0.5, 1.5, -0.5, -0.5, 1.5, 0.5, -0.5, -1.5, -0.5, -0.5, 1.5, 0.5, -0.5, -1.5, 0.5, -0.5, -1.5, -0.5, 0.5, 1.5, 0.5, -0.5, 1.5, 0.5, 0.5, 1.5, -0.5, -0.5, 1.5, 0.5, -0.5, 1.5, -0.5, 0.5, 1.5, -0.5, -0.5, -1.5, 0.5, 0.5, -1.5, 0.5, -0.5, -1.5, -0.5, 0.5, -1.5, 0.5, 0.5, -1.5, -0.5, -0.5, -1.5, -0.5)
 
-[node name="Level1" type="Node3D"]
-script = ExtResource("1_3cb6x")
+[node name="Level4" type="Node3D"]
+script = ExtResource("1_lpgdq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)

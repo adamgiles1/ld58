@@ -1,11 +1,11 @@
 class_name Globals extends Object
 
 static var levels: Array[PackedScene] = [
-	preload("res://levels/level1.tscn"),
-	preload("res://levels/level2.tscn"),
-	preload("res://levels/level3.tscn"),
-	preload("res://levels/level4.tscn"),
-	preload("res://levels/level5.tscn")
+	load("res://levels/level1.tscn"),
+	load("res://levels/level2.tscn"),
+	load("res://levels/level3.tscn"),
+	load("res://levels/level4.tscn"),
+	load("res://levels/level5.tscn")
 ]
 
 static var current_level: int = 0
