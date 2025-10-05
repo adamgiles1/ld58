@@ -100,3 +100,5 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35834348, 0.61558175)
 top_level = true
 fov = 60.0
+
+[editable path="bubbo"]

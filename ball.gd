@@ -1,4 +1,4 @@
-extends RigidBody3D
+class_name Ball extends RigidBody3D
 
 @onready var power_slider = %PowerSlider
 @onready var aim_slider = %AimSlider
@@ -8,6 +8,9 @@ extends RigidBody3D
 
 @onready var path_preview = %PathPreview
 @onready var ball_cam = %BallCam
+
+@onready var model_meshes: Array[MeshInstance3D] = [$bubbo/Sphere, $bubbo/Sphere_001, $bubbo/Sphere_004, $bubbo/Sphere_004/Sphere_002, $bubbo/Sphere_004/Sphere_003]
+
 var cam_offset = Vector3(0, 1, 2)
 var cam_angle = 0
 var cam_height = 0.5
@@ -26,11 +29,14 @@ var reset_point: Vector3
 var reset_velocity_on_next_frame := false
 var last_frame_position: Vector3
 
+var is_ghost := false
+
 func _ready() -> void:
-	shoot_button.pressed.connect(_shoot_button_is_pressed)
-	reset_point = global_position
-	Engine.time_scale = 0.5
-	last_frame_position = global_position
+	if !is_ghost:
+		shoot_button.pressed.connect(_shoot_button_is_pressed)
+		reset_point = global_position
+		Engine.time_scale = 0.5
+		last_frame_position = global_position
 
 func get_height() -> float:
 	return height_values[height_select]
@@ -48,6 +54,8 @@ func calculate_shot() -> Vector3:
 		return (flat_rot + Vector3.UP * get_height()) * power
 
 func _process(delta: float) -> void:
+	if is_ghost:
+		return
 	if Input.is_action_just_pressed("HeightUp"):
 		height_select += 1
 		if height_select >= len(height_values):
@@ -113,6 +121,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.linear_velocity = Vector3.ZERO
 		state.angular_velocity = Vector3.ZERO
 		global_position = reset_point
+		last_frame_position = reset_point # do this to prevent the raycast from checking for any hoops between reset_point and end of shot
 	
 	
 	# ray cast from last position to current position to check if we hit a hoop
@@ -138,8 +147,25 @@ func shoot() -> void:
 	active_shot = true
 	Signals.STROKE.emit()
 
+func ghost_shoot(shot_vel: Vector3) -> void:
+	apply_impulse(shot_vel)
+
 func reset() -> void:
 	reset_velocity_on_next_frame = true
 	path_preview.visible = true
 	active_shot = false
 	GameUI.instance.reset_reminder.visible = false
+
+func set_as_ghost(shot_vel: Vector3) -> void:
+	collision_layer = 8
+	is_ghost = true
+	ghost_shoot(shot_vel)
+	
+	for mesh in model_meshes:
+		var material: StandardMaterial3D = mesh.get_active_material(0)
+		material = material.duplicate()
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		var color: Color = material.albedo_color
+		color.a = .2
+		material.albedo_color = color
+		mesh.set_surface_override_material(0, material)
