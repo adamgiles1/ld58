@@ -153,7 +153,7 @@ func shoot() -> void:
 	var velocity = calculate_shot()
 	print("shot velocity: ", velocity)
 	apply_impulse(velocity)
-	apply_torque(-basis.x * velocity.length() * 0.3)
+	apply_torque(-global_basis.x * velocity.length() * 0.3)
 	# Output shot details here
 	path_preview.visible = false
 	active_shot = true
@@ -161,9 +161,13 @@ func shoot() -> void:
 
 func ghost_shoot(shot_vel: Vector3) -> void:
 	print("ghost velocity: ", shot_vel)
-	apply_impulse(shot_vel)
-	active_shot = true
-	#apply_torque(-basis.x * shot_vel.length() * 0.3)
+	var tween = create_tween()
+	tween.tween_interval(0.01)
+	tween.tween_callback(apply_impulse.bind(shot_vel))
+	tween.tween_callback(apply_torque.bind(-global_basis.x * shot_vel.length() * 0.3))
+	
+	#apply_impulse.(shot_vel)
+	#apply_torque(-global_basis.x * shot_vel.length() * 0.3)
 
 func reset() -> void:
 	reset_velocity_on_next_frame = true
