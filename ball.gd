@@ -30,6 +30,8 @@ var reset_velocity_on_next_frame := false
 var last_frame_position: Vector3
 
 var is_ghost := false
+var ghost_init := false
+var ghost_vel: Vector3
 
 func _ready() -> void:
 	if !is_ghost:
@@ -55,6 +57,9 @@ func calculate_shot() -> Vector3:
 
 func _process(delta: float) -> void:
 	if is_ghost:
+		if ghost_init:
+			ghost_init = false
+			ghost_shoot(ghost_vel)
 		return
 	if Input.is_action_just_pressed("HeightUp"):
 		height_select += 1
@@ -118,6 +123,8 @@ func _input(event: InputEvent) -> void:
 		cam_zoom = clamp(cam_zoom, 0.2, 2)
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	if is_ghost:
+		return
 	if reset_velocity_on_next_frame:
 		reset_velocity_on_next_frame = false
 		state.linear_velocity = Vector3.ZERO
@@ -144,6 +151,7 @@ func _shoot_button_is_pressed() -> void:
 	
 func shoot() -> void:
 	var velocity = calculate_shot()
+	print("shot velocity: ", velocity)
 	apply_impulse(velocity)
 	apply_torque(-basis.x * velocity.length() * 0.3)
 	# Output shot details here
@@ -152,7 +160,10 @@ func shoot() -> void:
 	Signals.STROKE.emit(velocity, global_position)
 
 func ghost_shoot(shot_vel: Vector3) -> void:
+	print("ghost velocity: ", shot_vel)
 	apply_impulse(shot_vel)
+	active_shot = true
+	#apply_torque(-basis.x * shot_vel.length() * 0.3)
 
 func reset() -> void:
 	reset_velocity_on_next_frame = true
@@ -163,7 +174,9 @@ func reset() -> void:
 func set_as_ghost(shot_vel: Vector3) -> void:
 	collision_layer = 8
 	is_ghost = true
-	ghost_shoot(shot_vel)
+	ghost_init = true
+	ghost_vel = shot_vel
+	path_preview.visible = false
 	
 	for mesh in model_meshes:
 		var material: StandardMaterial3D = mesh.get_active_material(0)

@@ -18,17 +18,6 @@ func _ready() -> void:
 	add_child(send_data_node)
 	add_child(get_data_node)
 
-func send_data():
-	print("sending data")
-	var headers = ["Content-Type: application/json"]
-	var body = {
-		"value1": 16,
-		"value2": "hello again again FROM ANSON",
-		"value3": "theId or is itttt HI"
-	}
-	var json = JSON.stringify(body)
-	send_data_node.request("https://jkx6qkm4vh.execute-api.us-east-1.amazonaws.com/default/ld58-send-stuff", headers, HTTPClient.METHOD_POST, json)
-
 func send_strokes(shots: Array[StrokeInfo]) -> void:
 	print("sending shots")
 	var headers = ["Content-Type: application/json"]
@@ -51,10 +40,14 @@ func send_strokes(shots: Array[StrokeInfo]) -> void:
 		print("sending shot")
 		send_data_node.request("https://jkx6qkm4vh.execute-api.us-east-1.amazonaws.com/default/ld58-send-stuff", headers, HTTPClient.METHOD_POST, json)
 		is_sending = true
-func get_data():
+func get_ghosts(level: int):
 	print("getting data")
 	var headers = ["Content-Type: application/json"]
-	get_data_node.request("https://lie56uzg51.execute-api.us-east-1.amazonaws.com/default/ld58-get-stuff", headers, HTTPClient.METHOD_GET, "")
+	var body = {
+		"level": level
+	}
+	var json = JSON.stringify(body)
+	get_data_node.request("https://lie56uzg51.execute-api.us-east-1.amazonaws.com/default/ld58-get-stuff", headers, HTTPClient.METHOD_POST, json)
 
 func send_data_response(result: int, code: int, headers: PackedStringArray, body: PackedByteArray):
 	is_sending = false
@@ -64,5 +57,11 @@ func send_data_response(result: int, code: int, headers: PackedStringArray, body
 func get_data_response(result: int, code: int, headers: PackedStringArray, body: PackedByteArray):
 	print("get-data result: ", result)
 	var parsed: Array = JSON.parse_string(body.get_string_from_utf8())
-	var res: Dictionary = parsed[2]
-	print("index 1: ", res)
+	var shots: Array[StrokeInfo]
+	for shot in parsed:
+		var velocity := Vector3(shot["velX"], shot["velY"], shot["velZ"])
+		var from := Vector3(shot["fromX"], shot["fromY"], shot["fromZ"])
+		var level: int = shot["level"]
+		var info := StrokeInfo.new(velocity, from, level)
+		shots.append(info)
+	Signals.GHOSTS_RETRIEVED.emit(shots)

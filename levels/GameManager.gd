@@ -8,6 +8,9 @@ var hoops_hit: int = 0
 var strokes: int = 0
 var stroke_stats: Array[StrokeInfo] = []
 
+var ghost_shots: Array[StrokeInfo] = []
+var time_till_next_ghost := 2.0
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	print("GAME MANAGER HI")
@@ -17,10 +20,29 @@ func _ready() -> void:
 		hoop.game_manager = self
 	print("Initialized with ", hoops_to_hit, " hoops")
 	Signals.STROKE.connect(on_stroke)
+	Signals.GHOSTS_RETRIEVED.connect(accept_ghosts)
+	get_ghosts()
 
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cut"):
 		spawn_ghost_ball(Vector3(3, 1, 1), Vector3(0, 0, 0)) # todo remove
+	time_till_next_ghost -= delta
+	if time_till_next_ghost <= 0 && len(ghost_shots) > 0:
+		var ghost = ghost_shots.pop_back()
+		spawn_ghost_ball(ghost.velocity, ghost.from)
+		time_till_next_ghost = 5.0
+
+func get_ghosts():
+	AwsService.get_ghosts(Globals.get_current_level_id())
+
+func accept_ghosts(shots: Array[StrokeInfo]) -> void:
+	print("Got ghosts: ", len(shots))
+	if len(shots) > 0 && shots[0].level != Globals.get_current_level_id():
+		print("Ghosts returned for other level, ignoring")
+		return
+	
+	ghost_shots = shots
+	ghost_shots.shuffle()
 
 func on_hoop_hit():
 	hoops_hit += 1
@@ -56,8 +78,8 @@ func load_next_level() -> void:
 	get_tree().change_scene_to_packed(next_level)
 
 func spawn_ghost_ball(velocity: Vector3, from: Vector3) -> void:
-	print("spawning ghostball with velocity: ", velocity)
+	print("spawning ghostball with velocity: ", velocity, "from: ", from)
 	var ghost: Ball = ball_scn.instantiate()
 	add_child(ghost)
 	ghost.set_as_ghost(velocity)
-	ghost.global_position = from
+	ghost.global_position = from + Vector3(0, .01, 0)

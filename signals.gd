@@ -2,6 +2,7 @@ extends Node
 
 signal HOOP_HIT
 signal STROKE(velocity: Vector3, from: Vector3)
+signal GHOSTS_RETRIEVED(ghosts: Array[StrokeInfo])
 
 var ui_scene = preload("res://ui/GameUI.tscn")
 
