@@ -64,18 +64,20 @@ func _process(delta: float) -> void:
 		height_select -= 1
 		if height_select < 0:
 			height_select += len(height_values)
-			
-	if Input.is_action_pressed("Shoot"):
-		shot_charge += delta
-	if Input.is_action_just_released("Shoot"):
-		shoot()
-		shot_charge = 0
-		active_shot = true
+		
+	if !active_shot:
+		if Input.is_action_pressed("Shoot"):
+			shot_charge += delta
+		if Input.is_action_just_released("Shoot"):
+			shoot()
+			shot_charge = 0
+			active_shot = true
 	
 	var shot = calculate_shot()
 	var shot_length = shot.length()
 	if shot_length > 0:
-		path_preview.global_basis = Basis.looking_at(shot)
+		# path_preview.global_basis = Basis.looking_at(shot)
+		look_at(global_position + shot)
 	path_preview.mesh.size = Vector2(0.05 + shot_length * 0.02, shot_length)
 	path_preview.mesh.center_offset = Vector3.FORWARD * shot_length * 0.5
 	
@@ -96,7 +98,7 @@ func _process(delta: float) -> void:
 	var flat_rot = Vector3(cos(cam_angle), 0, sin(cam_angle)) * (1 - cam_height)
 	flat_rot += Vector3.UP * cam_height
 	ball_cam.global_position = global_position + flat_rot.normalized() * cam_zoom
-	ball_cam.look_at(global_position)
+	ball_cam.look_at(global_position + Vector3.UP * cam_zoom * 0.3)
 	
 	if active_shot and (global_position.y < -5): #Better conditions here for when a shot is basically over
 		GameUI.instance.reset_reminder.visible = true
@@ -143,6 +145,7 @@ func _shoot_button_is_pressed() -> void:
 func shoot() -> void:
 	var velocity = calculate_shot()
 	apply_impulse(velocity)
+	apply_torque(-basis.x * velocity.length() * 0.3)
 	# Output shot details here
 	path_preview.visible = false
 	active_shot = true
