@@ -32,6 +32,8 @@ var right_flipper_tween
 @onready var shot_sound: AudioStreamPlayer = $ShotSound
 @onready var powering_up_sound: AudioStreamPlayer = $PoweringSound
 
+static var white_mat = preload("res://whitemat.tres")
+
 var cam_offset = Vector3(0, 1, 2)
 var cam_angle = 0
 var cam_height = 0.5
@@ -64,6 +66,20 @@ func _ready() -> void:
 	last_frame_position = global_position
 	set_idle_anim()
 	body_entered.connect(on_body_entered)
+	var collect = GameUI.get_collectibles()
+	if !collect[0]:
+		model_meshes[0].set_surface_override_material(0, white_mat)
+	if !collect[1]:
+		model_meshes[3].set_surface_override_material(0, white_mat)
+	if !collect[2]:
+		model_meshes[4].set_surface_override_material(0, white_mat)
+	if !collect[3]:
+		model_meshes[5].set_surface_override_material(0, white_mat)
+	if !collect[4]:
+		model_meshes[6].set_surface_override_material(0, white_mat)
+	if !collect[5]:
+		model_meshes[1].set_surface_override_material(0, white_mat)
+		model_meshes[2].set_surface_override_material(0, white_mat)
 
 func get_height() -> float:
 	return height_values[height_select]
@@ -245,7 +261,7 @@ func set_as_ghost(shot_vel: Vector3) -> void:
 		material = material.duplicate()
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		var color: Color = material.albedo_color
-		color.a = .25
+		color.a = .7
 		material.albedo_color = color
 		mesh.set_surface_override_material(0, material)
 		

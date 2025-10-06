@@ -1,6 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://bdres6yqhw74b"]
+[gd_scene load_steps=13 format=3 uid="uid://bdres6yqhw74b"]
 
 [ext_resource type="Script" uid="uid://dls7i0kr5onw3" path="res://ui/game_ui.gd" id="1_7r27d"]
+[ext_resource type="Shader" uid="uid://dh1iw1n4mgrp8" path="res://ui/pixel.gdshader" id="2_6vdb0"]
+[ext_resource type="FontFile" uid="uid://b2qbweqo12864" path="res://Kenney Pixel.ttf" id="3_ye8ga"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ye8ga"]
+shader = ExtResource("2_6vdb0")
+shader_parameter/pixel_size = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6vdb0"]
 bg_color = Color(7.412136e-06, 0.67812866, 0.7429936, 1)
@@ -28,42 +34,59 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7r27d")
 
-[node name="GameplayUI" type="Control" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="Pixelation" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_ye8ga")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GameplayUI"]
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="GameplayUI" type="Control" parent="CanvasLayer2"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer2/GameplayUI"]
 layout_mode = 1
 offset_left = 20.0
 offset_right = 370.0
 offset_bottom = 115.0
 
-[node name="StrokeLabel" type="Label" parent="GameplayUI/VBoxContainer"]
+[node name="StrokeLabel" type="Label" parent="CanvasLayer2/GameplayUI/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 64
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 100
 text = "Strokes: 0"
 
-[node name="StrokeHeightLabel" type="Label" parent="GameplayUI/VBoxContainer"]
+[node name="StrokeHeightLabel" type="Label" parent="CanvasLayer2/GameplayUI/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 50
 text = "Stroke Height: Low"
 
-[node name="Label" type="Label" parent="GameplayUI/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer2/GameplayUI/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 25
 text = "W and S change stroke height
 Click and hold to shoot
-Press P to open menu"
+Press P or TAB to open menu"
 
-[node name="ResetReminder" type="Control" parent="GameplayUI"]
+[node name="ResetReminder" type="Control" parent="CanvasLayer2/GameplayUI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -72,19 +95,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="GameplayUI/ResetReminder"]
+[node name="Label" type="Label" parent="CanvasLayer2/GameplayUI/ResetReminder"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 64
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 100
 text = "Press R To Reset"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Popup" type="Label" parent="GameplayUI"]
+[node name="Popup" type="Label" parent="CanvasLayer2/GameplayUI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
@@ -93,19 +117,20 @@ anchor_right = 1.0
 offset_left = -463.0
 offset_bottom = 67.0
 grow_horizontal = 0
-theme_override_font_sizes/font_size = 48
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 80
 text = "You beat par! WOW!"
 
-[node name="MenuUI" type="Control" parent="."]
+[node name="MenuUI" type="Control" parent="CanvasLayer2"]
 unique_name_in_owner = true
-layout_mode = 1
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Level Select" type="Panel" parent="MenuUI"]
+[node name="Level Select" type="Panel" parent="CanvasLayer2/MenuUI"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -113,14 +138,14 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -250.0
-offset_top = -200.0
+offset_top = -250.0
 offset_right = 250.0
-offset_bottom = 200.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_6vdb0")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuUI/Level Select"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -134,133 +159,171 @@ offset_bottom = 130.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="MenuUI/Level Select/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 80
 text = "FINAL BUPPO 64"
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="MenuUI/Level Select/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 columns = 3
 
-[node name="Level1" type="VBoxContainer" parent="MenuUI/Level Select/VBoxContainer/GridContainer"]
+[node name="Level1" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Level1Button" type="Button" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level1"]
+[node name="Level1Button" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level1"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
 text = "Level 1"
 
-[node name="Level1Score" type="Label" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level1"]
+[node name="Level1Score" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level1"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Best Score: -"
+horizontal_alignment = 1
 
-[node name="Level2" type="VBoxContainer" parent="MenuUI/Level Select/VBoxContainer/GridContainer"]
+[node name="Level2" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Level2Button" type="Button" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level2"]
+[node name="Level2Button" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level2"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
 text = "Level 2
 "
 
-[node name="Level2Score" type="Label" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level2"]
+[node name="Level2Score" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level2"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Best Score: -"
+horizontal_alignment = 1
 
-[node name="Level3" type="VBoxContainer" parent="MenuUI/Level Select/VBoxContainer/GridContainer"]
+[node name="Level3" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Level3Button" type="Button" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level3"]
+[node name="Level3Button" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level3"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
 text = "Level 3
 "
 
-[node name="Level3Score" type="Label" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level3"]
+[node name="Level3Score" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level3"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Best Score: -"
+horizontal_alignment = 1
 
-[node name="Level4" type="VBoxContainer" parent="MenuUI/Level Select/VBoxContainer/GridContainer"]
+[node name="Level4" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Level4Button" type="Button" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level4"]
+[node name="Level4Button" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level4"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
 text = "Level 4"
 
-[node name="Level4Score" type="Label" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level4"]
+[node name="Level4Score" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level4"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Best Score: -"
+horizontal_alignment = 1
 
-[node name="Level5" type="VBoxContainer" parent="MenuUI/Level Select/VBoxContainer/GridContainer"]
+[node name="Level5" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Level5Button" type="Button" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level5"]
+[node name="Level5Button" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level5"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
 text = "Level 5
 "
 
-[node name="Level5Score" type="Label" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level5"]
+[node name="Level5Score" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level5"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Best Score: -"
+horizontal_alignment = 1
 
-[node name="Level6" type="VBoxContainer" parent="MenuUI/Level Select/VBoxContainer/GridContainer"]
+[node name="Level6" type="VBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Level6Button" type="Button" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level6"]
+[node name="Level6Button" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level6"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
 text = "Level 6
 "
 
-[node name="Level6Score" type="Label" parent="MenuUI/Level Select/VBoxContainer/GridContainer/Level6"]
+[node name="Level6Score" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/GridContainer/Level6"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Best Score: -"
+horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="MenuUI/Level Select/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer"]
 layout_mode = 2
 
-[node name="VolumeControl" type="HBoxContainer" parent="MenuUI/Level Select/VBoxContainer"]
+[node name="VolumeControl" type="HBoxContainer" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="MenuUI/Level Select/VBoxContainer/VolumeControl"]
+[node name="Label" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/VolumeControl"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Volume
 "
 
-[node name="VolumeSlider" type="HSlider" parent="MenuUI/Level Select/VBoxContainer/VolumeControl"]
+[node name="VolumeSlider" type="HSlider" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer/VolumeControl"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 3
 value = 50.0
 
-[node name="Label2" type="Label" parent="MenuUI/Level Select/VBoxContainer"]
+[node name="Label2" type="Label" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 30
 text = "Made by Adam Giles and Anson Rutherford
 for Ludum Dare 58
 "
 
-[node name="TabContainer" type="TabContainer" parent="MenuUI"]
+[node name="Intro" type="Button" parent="CanvasLayer2/MenuUI/Level Select/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 40
+text = "  Dream Once More...  "
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer2/MenuUI"]
 visible = false
 layout_mode = 0
 offset_left = 576.0
@@ -277,3 +340,193 @@ theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_fpxnd")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_e78dt")
 theme_override_styles/tab_disabled = SubResource("StyleBoxFlat_rn3fg")
 theme_override_styles/tab_focus = SubResource("StyleBoxFlat_j65kr")
+
+[node name="IntroUI" type="Control" parent="CanvasLayer2"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label1" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "Hello Buppo
+(CLICK THE GAME)"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "You are the last Buppo of all"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label3" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "You once delighted owners of the classic Playerstation 64 with your penchant for sweet trickshots"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label4" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "But now you are alone, collecting rings at the end of time"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label5" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "Your countless brothers still echo in your heart, perhaps paving the way forward ??"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label6" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "Untextured and broken, you must strive to beat six unique and challenging levels within par"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label7" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "Only then will you achieve the glory due to you, Buppo"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label8" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "Sweet Buppo, may your ring collecting prowess echo across time and space"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="Label9" type="Label" parent="CanvasLayer2/IntroUI"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -253.5
+offset_top = -155.0
+offset_right = 253.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_ye8ga")
+theme_override_font_sizes/font_size = 60
+text = "As you are carried by visions of your ancestors, you will inspire them forward in turn"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2

@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://pxqgh1bccocw"]
+
+[ext_resource type="PackedScene" uid="uid://hysufvbupbkr" path="res://IntroBall.tscn" id="1_ayt76"]
+[ext_resource type="Script" uid="uid://dn58vxw0st4wj" path="res://intro_camera.gd" id="2_7a8ye"]
+[ext_resource type="Script" uid="uid://bfntxutde61gq" path="res://light_pivot.gd" id="3_7a8ye"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_0a7ni"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_y72e6"]
+sky_material = SubResource("ProceduralSkyMaterial_0a7ni")
+
+[sub_resource type="Environment" id="Environment_u2rf6"]
+background_mode = 1
+sky = SubResource("Sky_y72e6")
+ambient_light_color = Color(0.7034441, 0.35292554, 0.9752144, 1)
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0a7ni"]
+
+[node name="Intro" type="Node3D"]
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+light_color = Color(1, 0, 1, 1)
+sky_mode = 1
+script = ExtResource("3_7a8ye")
+axis = Vector3(0, 1, 0)
+speed = 0.5
+
+[node name="DirectionalLight3D4" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+light_color = Color(1, 1, 0, 1)
+sky_mode = 1
+script = ExtResource("3_7a8ye")
+axis = Vector3(0, 0, 1)
+
+[node name="DirectionalLight3D5" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+light_color = Color(0, 1, 1, 1)
+sky_mode = 1
+script = ExtResource("3_7a8ye")
+axis = Vector3(1, 0, 0)
+speed = 1.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_u2rf6")
+
+[node name="Ball" parent="." instance=ExtResource("1_ayt76")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6204046, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_0a7ni")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.8383472, 0.54513663, 0, -0.54513663, 0.8383472, 0, 0.83377135, 0.28307056)
+script = ExtResource("2_7a8ye")

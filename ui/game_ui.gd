@@ -38,17 +38,40 @@ var popup_timer = 0
 @onready var level6_score = %Level6Score
 
 @onready var volume_slider = %VolumeSlider
+
+@onready var intro_button = %Intro
+
+@onready var intro_ui = %IntroUI
+@onready var intro_text = [
+	%IntroUI/Label1,
+	%IntroUI/Label2,
+	%IntroUI/Label3,
+	%IntroUI/Label4,
+	%IntroUI/Label5,
+	%IntroUI/Label6,
+	%IntroUI/Label7,
+	%IntroUI/Label8,
+	%IntroUI/Label9
+]
+
+var intro = true
+var intro_counter = 0
+var intro_max = 9
+
+var intro_level = load("res://intro.tscn")
 # Add "Best score" trackers, add real values, etc. Indicate if collectible is obtained, add new "collectibles" tab??
 # Pausing doesn't actually pause, but we could change that, just brings up the menu and gives you your cursor
 
 func _ready() -> void:
 	paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	gameplay_ui.visible = true
+	gameplay_ui.visible = false
 	menu_ui.visible = false
 	reset_reminder.visible = false
 	popup.visible = false
+	intro_ui.visible = true
 	instance = self
+	intro = true
 
 	# NEWLEVEL
 	level1_button.pressed.connect(load_level.bind(0))
@@ -61,7 +84,39 @@ func _ready() -> void:
 	Signals.STROKE.connect(_on_stroke)
 	Signals.LEVEL_COMPLETE.connect(_on_level_complete)
 	
+	intro_button.pressed.connect(load_intro)
+	
+func load_intro() -> void:
+	get_tree().change_scene_to_packed(intro_level)
+	gameplay_ui.visible = false
+	menu_ui.visible = false
+	intro_ui.visible = true
+	intro = true
+	intro_counter = 0
+	for label in intro_text:
+		label.visible = false
+	
 func _process(delta: float) -> void:
+	if intro:
+		if intro_counter >= intro_max:
+			return
+		if Input.is_action_just_pressed("Shoot"):
+			intro_text[intro_counter].visible = false
+			intro_counter += 1
+			IntroCamera.new_pose()
+			if intro_counter < intro_max:
+				intro_text[intro_counter].visible = true
+			else:
+				intro_ui.visible = false
+				intro_counter = 0
+				gameplay_ui.visible = true
+				paused = false
+				intro = false
+				var tween = create_tween()
+				tween.tween_interval(0.1)
+				tween.tween_callback(load_level.bind(0))
+		return
+		
 	AudioServer.set_bus_volume_db(0, linear_to_db(volume_slider.value * 0.01))
 	if popup_timer > 0:
 		popup_timer -= delta
@@ -107,12 +162,12 @@ static func set_stroke_height(height_text: String) -> void:
 	
 func _on_stroke(_velocity, _position) -> void:
 	strokes += 1
-	stroke_label.text = "Strokes: %s" % strokes
+	stroke_label.text = "Strokes: %s/%s" % [strokes, stroke_pars[Globals.current_level]]
 	
-func _on_level_complete(level: int, strokes: int) -> void:
-	if stroke_records[level] < 0 or stroke_records[level] > strokes:
-		stroke_records[level] = strokes
-	if !collectibles[level] and strokes <= stroke_pars[level]:
+func _on_level_complete(level: int, level_strokes: int) -> void:
+	if stroke_records[level] < 0 or stroke_records[level] > level_strokes:
+		stroke_records[level] = level_strokes
+	if !collectibles[level] and level_strokes <= stroke_pars[level]:
 		collectibles[level] = true
 		popup.visible = true
 		popup_timer = 0.8
@@ -134,3 +189,6 @@ func update_score_text(index: int, level_score: Label) -> void:
 	if collectibles[index]:
 		level_score.text += "!"
 		level_score.add_theme_color_override("font_color", Color.GOLD)
+		
+static func get_collectibles():
+	return instance.collectibles
