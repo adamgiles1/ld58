@@ -1,0 +1,277 @@
+[gd_scene load_steps=14 format=3 uid="uid://chd2xevtxewpd"]
+
+[ext_resource type="Script" uid="uid://ddxkxj6ikjo8p" path="res://levels/GameManager.gd" id="1_ipvgf"]
+[ext_resource type="PackedScene" uid="uid://1g3uswvc7gla" path="res://level_pieces/hoop.tscn" id="2_j1f0n"]
+[ext_resource type="PackedScene" uid="uid://c7l0q1s6gpb" path="res://Ball.tscn" id="3_nnkdi"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1ih6b"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_303b4"]
+sky_material = SubResource("ProceduralSkyMaterial_1ih6b")
+
+[sub_resource type="Environment" id="Environment_5j18n"]
+background_mode = 1
+sky = SubResource("Sky_303b4")
+ambient_light_source = 2
+ambient_light_color = Color(0.7372549, 0.41568628, 0.12156863, 1)
+ambient_light_energy = 0.1
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_ogp8r"]
+size = Vector2(30, 30)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7cdvc"]
+albedo_color = Color(0, 0.4759097, 0.04607106, 1)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_303b4"]
+bounce = 0.7
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1ih6b"]
+data = PackedVector3Array(15, -15, 0, -15, -15, 0, 15, 15, 0, -15, -15, 0, -15, 15, 0, 15, 15, 0)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_aaqj5"]
+bounce = 0.5
+absorbent = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_aaqj5"]
+size = Vector3(0.2, 5, 2)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ipvgf"]
+points = PackedVector3Array(0.1, 2.5, 1, -0.1, 2.5, 1, 0.1, -2.5, 1, 0.1, 2.5, -1, -0.1, 2.5, -1, -0.1, -2.5, 1, 0.1, -2.5, -1, -0.1, -2.5, -1)
+
+[node name="Level3" type="Node3D"]
+script = ExtResource("1_ipvgf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5j18n")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_ogp8r")
+surface_material_override/0 = SubResource("StandardMaterial3D_7cdvc")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+physics_material_override = SubResource("PhysicsMaterial_303b4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_1ih6b")
+
+[node name="Hoop5" parent="." instance=ExtResource("2_j1f0n")]
+transform = Transform3D(2.9802326e-08, -4.3711392e-08, 1.0000001, 1.302701e-15, 1.0000001, 4.3711392e-08, -1, 0, 2.9802322e-08, -8.9, 1.3750001, 3)
+
+[node name="Hoop7" parent="." instance=ExtResource("2_j1f0n")]
+transform = Transform3D(-5.8612546e-08, 4.3711392e-08, -1, 4.447867e-16, 1.0000001, 4.3711395e-08, 0.9999999, -7.538496e-16, -5.861255e-08, 4.1000004, 2.375, 0)
+
+[node name="Hoop6" parent="." instance=ExtResource("2_j1f0n")]
+transform = Transform3D(-0.258819, -4.2221966e-08, 0.9659259, -2.3417073e-15, 1.0000001, 4.37114e-08, -0.96592575, 1.1313345e-08, -0.258819, -3.8999996, 1.3750001, -8)
+
+[node name="Ball" parent="." instance=ExtResource("3_nnkdi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+physics_material_override = null
+can_sleep = true
+angular_damp = 0.0
+
+[node name="KnockableThing" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.900001, 0)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing3" type="RigidBody3D" parent="."]
+transform = Transform3D(0.9659258, 0, -0.25881904, 0, 1, 0, 0.25881904, 0, 0.9659258, -4.8, 1.900001, -2.1)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing3"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing3"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing2" type="RigidBody3D" parent="."]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -4.8, 1.900001, 2.1)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing2"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing2"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing4" type="RigidBody3D" parent="."]
+transform = Transform3D(0.6427877, 0, -0.7660445, 0, 1, 0, 0.7660445, 0, 0.6427877, -2.4523716, 1.900001, -5.5021386)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing4"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing4"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing5" type="RigidBody3D" parent="."]
+transform = Transform3D(0.42261824, 0, -0.9063078, 0, 1, 0, 0.9063078, 0, 0.42261824, -0.71512103, 1.900001, -6.698784)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing5"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing5"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing6" type="RigidBody3D" parent="."]
+transform = Transform3D(0.8191521, 0, -0.57357657, 0, 1, 0, 0.57357657, 0, 0.8191521, -3.932507, 1.900001, -3.9990766)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing6"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing6"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing7" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.50000006, 0, -0.8660253, 0, 1, 0, 0.8660253, 0, -0.50000006, 3.2367325, 1.900001, -6.1480007)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing7"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing7"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing8" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.7071069, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, -0.7071069, 4.9553857, 1.900001, -4.924796)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing8"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing8"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing9" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.2588191, 0, -0.9659258, 0, 1, 0, 0.9659258, 0, -0.2588191, 1.3180795, 1.900001, -7.0247965)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing9"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing9"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing10" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.98480785, 0, -0.17364827, 0, 1, 0, 0.17364827, 0, -0.98480785, 6.7279086, 1.900001, -1.1906211)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing10"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing10"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing11" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.9961947, 0, 0.08715585, 0, 1, 0, -0.08715585, 0, -0.9961947, 6.8956094, 1.900001, 0.9122049)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing11"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing11"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing12" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.90630794, 0, -0.42261812, 0, 1, 0, 0.42261812, 0, -0.90630794, 6.166288, 1.900001, -3.2239869)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing12"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing12"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing13" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.49999997, 0, 0.8660255, 0, 1, 0, -0.8660255, 0, -0.49999997, 4.302096, 1.900001, 4.148003)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing13"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing13"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing14" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 2.3834434, 1.900001, 5.024798)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing14"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing14"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing15" type="RigidBody3D" parent="."]
+transform = Transform3D(-0.7071067, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.7071067, 6.02075, 1.900001, 2.924798)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing15"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing15"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing16" type="RigidBody3D" parent="."]
+transform = Transform3D(0.34202015, 0, 0.9396927, 0, 1, 0, -0.9396927, 0, 0.34202015, -1.7367078, 1.900001, 4.69276)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing16"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing16"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing17" type="RigidBody3D" parent="."]
+transform = Transform3D(0.5735765, 0, 0.81915194, 0, 1, 0, -0.81915194, 0, 0.5735765, -3.6416593, 1.900001, 3.78658)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing17"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing17"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")
+
+[node name="KnockableThing18" type="RigidBody3D" parent="."]
+transform = Transform3D(0.08715597, 0, 0.9961947, 0, 1, 0, -0.9961947, 0, 0.08715597, 0.30504826, 1.900001, 5.223065)
+mass = 0.1
+physics_material_override = SubResource("PhysicsMaterial_aaqj5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="KnockableThing18"]
+mesh = SubResource("BoxMesh_aaqj5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KnockableThing18"]
+shape = SubResource("ConvexPolygonShape3D_ipvgf")

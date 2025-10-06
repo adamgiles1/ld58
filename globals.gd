@@ -5,7 +5,8 @@ static var levels: Array[PackedScene] = [
 	load("res://levels/level2.tscn"),
 	load("res://levels/level3.tscn"),
 	load("res://levels/level4.tscn"),
-	load("res://levels/level5.tscn")
+	load("res://levels/level5.tscn"),
+	load("res://levels/level6.tscn")
 ]
 
 static var current_level: int = 0

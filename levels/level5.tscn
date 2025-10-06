@@ -1,7 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://d0unm07e8kcgx"]
+[gd_scene load_steps=14 format=3 uid="uid://d0unm07e8kcgx"]
 
 [ext_resource type="Script" uid="uid://ddxkxj6ikjo8p" path="res://levels/GameManager.gd" id="1_hydfx"]
-[ext_resource type="Texture2D" uid="uid://bawtve50f2r23" path="res://icon.svg" id="2_bufqw"]
 [ext_resource type="PackedScene" uid="uid://1g3uswvc7gla" path="res://level_pieces/hoop.tscn" id="2_s216a"]
 [ext_resource type="PackedScene" uid="uid://c7l0q1s6gpb" path="res://Ball.tscn" id="3_bufqw"]
 [ext_resource type="PhysicsMaterial" uid="uid://ccv7y2wme3x26" path="res://levels/bounce_physics_mat.tres" id="4_s216a"]
@@ -25,10 +24,8 @@ glow_enabled = true
 [sub_resource type="QuadMesh" id="QuadMesh_ogp8r"]
 size = Vector2(30, 30)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7cdvc"]
-albedo_texture = ExtResource("2_bufqw")
-uv1_scale = Vector3(10, 10, 10)
-uv1_triplanar = true
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s216a"]
+albedo_color = Color(0, 0.4745098, 0.047058824, 1)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_303b4"]
 bounce = 0.7
@@ -54,7 +51,7 @@ environment = SubResource("Environment_5j18n")
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("QuadMesh_ogp8r")
-surface_material_override/0 = SubResource("StandardMaterial3D_7cdvc")
+surface_material_override/0 = SubResource("StandardMaterial3D_s216a")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
 physics_material_override = SubResource("PhysicsMaterial_303b4")

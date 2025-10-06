@@ -245,7 +245,7 @@ func set_as_ghost(shot_vel: Vector3) -> void:
 		material = material.duplicate()
 		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		var color: Color = material.albedo_color
-		color.a = .2
+		color.a = .25
 		material.albedo_color = color
 		mesh.set_surface_override_material(0, material)
 		

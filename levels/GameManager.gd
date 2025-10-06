@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
 		var ghost = ghost_shots[next_ghost_idx]
 		next_ghost_idx += 1
 		spawn_ghost_ball(ghost.velocity, ghost.from)
-		time_till_next_ghost = randf_range(1.0, 5.0)
+		time_till_next_ghost = randf_range(1.0, 2.5)
 
 func get_ghosts():
 	AwsService.get_ghosts(Globals.get_current_level_id())
